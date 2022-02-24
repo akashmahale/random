@@ -1,0 +1,84 @@
+<app-navbar primary="mal"></app-navbar>
+<div class="container">
+  <app-head-sub header="MAL Random Anime Picker" subHeader="Choose what you want to watch next"></app-head-sub>
+  <div class="row">
+    <div class="col">
+      <form>
+        <div class="form-group row">
+          <div class="col-6">
+            <label for="malUsername">MAL username</label>
+            <input type="text" class="form-control my-1" id="malUsername1" [(ngModel)]="malUsername" name="malUsername">
+            <div class="d-inline-flex my-1 ">
+              <div class="input-group-prepend mr-2">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">{{checkListFilterSelection.name}}</button>
+                <div class="dropdown-menu pointer">
+                  <a class="dropdown-item" (click)="checkListFilterSelect(action)"
+                    *ngFor="let action of checkListFilter" [style.display]="showButtons(action)">{{action.name}}</a>
+                </div>
+              </div>
+              <div class="input-group-prepend mr-2">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">{{checkListCatSelection.name}}</button>
+                <div class="dropdown-menu pointer">
+                  <a class="dropdown-item" (click)="checkListCatSelect(action)"
+                    *ngFor="let action of checkListCat">{{action.name}}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="input-group mb-3 ">
+              <div class="input-group-prepend m-1" *ngFor="let action of checkListType"
+                [style.display]="showButtons(action)">
+                <div class="input-group-text">
+                  {{action.name}}
+                </div>
+                <div class="input-group-text">
+                  <input type="checkbox" (change)="checkListTypeSelect(action, $event)">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-center mb-3">
+          <div class="col-4" [ngSwitch]="loading">
+            <button class="btn btn-mal btn-lg btn-block" *ngSwitchCase="true" disabled><span class="spinner-border"
+                role="status" aria-hidden="true"></span></button>
+            <button class="btn btn-mal btn-lg btn-block" *ngSwitchDefault (click)="getAnime()">Submit</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card mt-3 pointer d-flex flex-row" style="width: 100%;" (click)="openWindow()"
+    *ngIf="anime?.mal_id !== undefined">
+    <div class="col-4">
+      <img class="card-img-left w-100" [src]="anime?.image_url" alt="Card image cap">
+    </div>
+    <div class="col-8">
+      <div class="card-body">
+        <h5 class="card-title">{{anime?.title}}</h5>
+        <p class="card-text">
+          Type: {{anime?.type}}<br>
+          <span *ngIf="checkListCatSelection?.name == 'Manga'">Author<span *ngIf="anime?.authors?.length > 1">s</span>:
+          <span *ngFor="let author of anime?.authors; let i = index"> {{author?.name}}
+            <span *ngIf="anime?.authors[i+1] != null"> | </span>
+          </span> </span>
+          <span *ngIf="checkListCatSelection?.name == 'Anime'">Studio<span *ngIf="anime?.studios?.length > 1">s</span>:
+          <span *ngFor="let studio of anime?.studios">{{studio?.name}}
+            <span *ngIf="anime?.studios[i+1] != null"> | </span>
+          </span></span><br>
+          <span *ngIf="checkListCatSelection?.name == 'Manga'">Chapters: {{anime?.read_chapters}}/{{anime?.chapters}}<br></span>
+          <span *ngIf="checkListCatSelection?.name == 'Anime' && anime?.episodes">Episodes: {{anime?.watched_episodes}}/{{anime?.episodes}}<br></span>
+
+          Genre<span *ngIf="anime?.genres?.length > 1">s</span>:
+          <span *ngFor="let genre of anime?.genres; let i = index">{{genre?.name}}
+              <span *ngIf="anime?.genres[i+1] != null"> | </span>
+          </span><br>
+          Popularity: {{anime?.popularity}} | Rank: {{anime?.rank}}<span *ngIf="anime?.score"> | Score: {{anime?.score}}</span><br>
+      </div>
+    </div>
+  </div>
+</div>

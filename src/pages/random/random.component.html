@@ -1,0 +1,15 @@
+<app-navbar primary="primary"></app-navbar>
+<div class="container">
+    <app-head-sub header="Pick random item" subHeader="This tool picks a random item from a list of items
+    provided"></app-head-sub>
+  <div class="input-group">
+    <textarea class="form-control mt-3 mb-3" aria-label="With textarea" rows="12" [(ngModel)]="list"></textarea>
+  </div>
+  <div class="text-center">
+    <button type="button" class="btn btn-primary btn-lg btn-block" (click)="generateRandom()">GENERATE</button>
+  </div>
+  <div *ngIf="result.show">
+    <span class="p-3 mt-3 d-flex text-light bg-dark">{{result.random}}</span>
+      <span class="p-3 my-3 d-flex text-light bg-dark">The item {{result.random}} was found at line {{result.line}}</span>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+// Custom.scss
+// Option A: Include all of Bootstrap
+
+
+// change the theme
+
+$theme-colors: (
+  "primary": #4caf50,
+  "mal": #26448F
+);
+
+@import "node_modules/bootstrap/scss/bootstrap";
