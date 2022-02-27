@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/services/api.service';
-import { anime, results } from 'src/interface/api';
+// import { anime, results } from 'src/interface/api';
 
 @Component({
   selector: 'app-mal-grab',
@@ -10,7 +10,7 @@ import { anime, results } from 'src/interface/api';
 export class MalGrabComponent implements OnInit {
   loading = false;
   checkListFilter = [
-    { name: 'All', id: '0' },
+    { name: 'All', id: '7' },
     { name: 'Watching', id: '1', type: 'animelist' },
     { name: 'Reading', id: '1', type: 'mangalist' },
     { name: 'Completed', id: '2' },
@@ -43,7 +43,7 @@ export class MalGrabComponent implements OnInit {
   checkListCatSelection = this.checkListCat[0];
   malUsername = '';
   animeList = [];
-  anime: results = {};
+  anime: any = {};
   constructor(public api: ApiService) {
   }
   s;
@@ -61,17 +61,17 @@ export class MalGrabComponent implements OnInit {
     malUsername !== null ? (this.malUsername = malUsername) : '';
   }
 
-  getAnime() {
+  async getAnime() {
     this.anime = {};
-    this.loading = true;
-    console.log(this.animeList.length)
     if (!this.animeList.length) {
-      console.log(this.malUsername);
-      this.api.getAnimeByUser(
-        this.malUsername,
+      this.loading = true;
+      this.api.getAnimeByUser(this.malUsername,
         this.checkListCatSelection.id,
-        this.checkListFilterSelection.id
-      );
+        this.checkListFilterSelection.id,this.checkListTypeSelection.map(d => d.id.toLowerCase())).subscribe((data: any) => {
+          this.loading = false;
+          this.animeList = data;
+          this.randomFilterAnime();
+        })
       localStorage.setItem('mal', this.malUsername);
     } else {
       this.randomFilterAnime();
@@ -99,17 +99,12 @@ export class MalGrabComponent implements OnInit {
     const max = fiteredList.length - 1;
     const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
     const result = fiteredList[randomNumber]
-    console.log(result)
     if(result == undefined){
       alert("None matches Filters")
       this.loading = false;
       return;
     }
-    this.anime = await this.api.getResult(result.mal_id, this.checkListCatSelection.name.toLowerCase())
-    // const win = await window.open(fiteredList[randomNumber].url, '_blank');
-    // win.focus();
-    this.anime.watched_episodes = result.watched_episodes;
-    this.anime.read_chapters = result.read_chapters
+    this.anime = result
     this.loading = false;
   }
 
@@ -131,27 +126,11 @@ export class MalGrabComponent implements OnInit {
   }
 
   randomFilterAnime() {
-
-    let fiteredList = [];
-    if (this.checkListTypeSelection.length) {
-      this.checkListTypeSelection.forEach(type => {
-        console.log(type);
-        const a = this.animeList.filter(anime1 => {
-          if (anime1.type.toLowerCase() === type.id) {
-            return anime1;
-          }
-        });
-        fiteredList = [...fiteredList, ...a];
-      });
-    } else {
-      fiteredList = this.animeList;
-    }
-
-    this.randomAnime(fiteredList);
+    this.randomAnime(this.animeList);
   }
 
   async openWindow() {
-    const win = await window.open(this.anime.url, '_blank');
+    const win = await window.open(`https://myanimelist.net${this.anime['anime_url'] || this.anime['manga_url']}`, '_blank');
     win.focus();
   }
 }

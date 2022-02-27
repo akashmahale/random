@@ -19,43 +19,10 @@ export class ApiService {
 
 
 
-  async getAnimeByUser(username, listType, type) {
-    const interval = setInterval(async () => {
-      const data: Api = await this.numberedCall(
-        username,
-        listType,
-        type,
-        this.i
-      );
-      console.log(this.anime);
-      switch (listType) {
-        case 'animelist':
-          if (!data.anime.length) {
-            clearInterval(interval);
-            this.i = 1;
-            this.anime = [];
-            this.animeComplete.next(true);
-          } else {
-            this.animeBS.next([...this.anime, ...data.anime]);
-            this.i++;
-          }
-          break;
-        case 'mangalist':
-          if (!data.manga.length) {
-            clearInterval(interval);
-            this.i = 1;
-            this.anime = [];
-            this.animeComplete.next(true);
-          } else {
-            this.animeBS.next([...this.anime, ...data.manga]);
-            this.i++;
-          }
-          break;
-        default:
-          break;
-      }
-
-    }, 3000);
+  getAnimeByUser(username, listType, type, filters) {
+    
+    return this.https
+    .post(`${environment.apiBackend}mal/random_mal`, {username, listType, type, filters})
   }
 
   numberedCall(username, listType, type, page) {

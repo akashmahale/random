@@ -53,31 +53,35 @@
   </div>
 
   <div class="card mt-3 pointer d-flex flex-row" style="width: 100%;" (click)="openWindow()"
-    *ngIf="anime?.mal_id !== undefined">
+    *ngIf="anime?.anime_id !== undefined || anime?.manga_id !== undefined">
     <div class="col-4">
-      <img class="card-img-left w-100" [src]="anime?.image_url" alt="Card image cap">
+      <img class="card-img-left w-100" [src]="anime?.anime_image_path || anime?.manga_image_path" alt="Card image cap">
     </div>
     <div class="col-8">
       <div class="card-body">
-        <h5 class="card-title">{{anime?.title}}</h5>
+        <h5 class="card-title">{{anime?.anime_title || anime?.manga_title}}</h5>
         <p class="card-text">
-          Type: {{anime?.type}}<br>
-          <span *ngIf="checkListCatSelection?.name == 'Manga'">Author<span *ngIf="anime?.authors?.length > 1">s</span>:
+          Type: {{anime?.anime_media_type_string || anime?.manga_media_type_string}}<br>
+          <!-- <span *ngIf="checkListCatSelection?.name == 'Manga'">Author<span *ngIf="anime?.authors?.length > 1">s</span>:
           <span *ngFor="let author of anime?.authors; let i = index"> {{author?.name}}
             <span *ngIf="anime?.authors[i+1] != null"> | </span>
-          </span> </span>
-          <span *ngIf="checkListCatSelection?.name == 'Anime'">Studio<span *ngIf="anime?.studios?.length > 1">s</span>:
-          <span *ngFor="let studio of anime?.studios">{{studio?.name}}
-            <span *ngIf="anime?.studios[i+1] != null"> | </span>
+          </span> </span> -->
+          <span *ngIf="checkListCatSelection?.name == 'Anime'">Studio<span *ngIf="anime?.anime_studios?.length > 1">s</span>:
+          <span *ngFor="let studio of anime?.anime_studios">{{studio?.name}}
+            <span *ngIf="anime?.anime_studios[i+1] != null"> | </span>
           </span></span><br>
-          <span *ngIf="checkListCatSelection?.name == 'Manga'">Chapters: {{anime?.read_chapters}}/{{anime?.chapters}}<br></span>
-          <span *ngIf="checkListCatSelection?.name == 'Anime' && anime?.episodes">Episodes: {{anime?.watched_episodes}}/{{anime?.episodes}}<br></span>
+          <span *ngIf="checkListCatSelection?.name == 'Manga' && anime?.manga_num_chapters">Chapters: {{anime?.num_read_chapters}}/{{anime?.manga_num_chapters}}<br></span>
+          <span *ngIf="checkListCatSelection?.name == 'Anime' && anime?.anime_num_episodes">Episodes: {{anime?.num_watched_episodes}}/{{anime?.anime_num_episodes}}<br></span>
 
-          Genre<span *ngIf="anime?.genres?.length > 1">s</span>:
+          <span *ngIf="anime?.genres?.length">Genre<span *ngIf="anime?.genres?.length > 1">s</span>:</span>
           <span *ngFor="let genre of anime?.genres; let i = index">{{genre?.name}}
               <span *ngIf="anime?.genres[i+1] != null"> | </span>
           </span><br>
-          Popularity: {{anime?.popularity}} | Rank: {{anime?.rank}}<span *ngIf="anime?.score"> | Score: {{anime?.score}}</span><br>
+          <span *ngIf="anime?.demographics?.length">Demographic<span *ngIf="anime?.demographics?.length > 1">s</span>:</span>
+          <span *ngFor="let demographic of anime?.demographics; let i = index">{{demographic?.name}}
+              <span *ngIf="anime?.demographics[i+1] != null"> | </span>
+          </span><br>
+          <!-- Popularity: {{anime?.popularity}} | Rank: {{anime?.rank}}<span *ngIf="anime?.score"> | Score: {{anime?.score}}</span><br> -->
       </div>
     </div>
   </div>
